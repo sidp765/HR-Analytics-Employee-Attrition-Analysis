@@ -1,0 +1,178 @@
+SQL QUERIES:-
+
+CREATE DATABASE HR_Analytics;
+
+USE HR_Analytics;
+
+CREATE TABLE Employees (
+    Age INT,
+    Attrition VARCHAR(5),
+    BusinessTravel VARCHAR(30),
+    DailyRate INT,
+    Department VARCHAR(50),
+    DistanceFromHome INT,
+    Education INT,
+    EducationField VARCHAR(50),
+    EmployeeCount INT,
+    EmployeeNumber INT PRIMARY KEY,
+    EnvironmentSatisfaction INT,
+    Gender VARCHAR(10),
+    HourlyRate INT,
+    JobInvolvement INT,
+    JobLevel INT,
+    JobRole VARCHAR(50),
+    JobSatisfaction INT,
+    MaritalStatus VARCHAR(20),
+    MonthlyIncome INT,
+    MonthlyRate INT,
+    NumCompaniesWorked INT,
+    Over18 CHAR(1),
+    OverTime VARCHAR(5),
+    PercentSalaryHike INT,
+    PerformanceRating INT,
+    RelationshipSatisfaction INT,
+    StandardHours INT,
+    StockOptionLevel INT,
+    TotalWorkingYears INT,
+    TrainingTimesLastYear INT,
+    WorkLifeBalance INT,
+    YearsAtCompany INT,
+    YearsInCurrentRole INT,
+    YearsSinceLastPromotion INT,
+    YearsWithCurrManager INT
+);
+
+select * from Employees;
+
+
+select count(EmployeeNumber)
+from hr_analytics.employees;
+
+SELECT
+ROUND(
+SUM(CASE WHEN Attrition='Yes' THEN 1 ELSE 0 END)*100.0/
+COUNT(*),2
+) AS AttritionRate
+FROM employees;
+
+SELECT Department,
+COUNT(*) AS AttritionCount
+FROM employees
+WHERE Attrition='Yes'
+GROUP BY Department
+ORDER BY AttritionCount DESC;
+
+select Department,
+avg(MonthlyIncome) as AverageSalary
+from employees
+group by Department;
+
+select *
+from employees 
+order by MOnthlyIncome DESC
+limit 10;
+
+SELECT JobRole,
+COUNT(*) AS AttritionCount
+FROM employees
+WHERE Attrition='Yes'
+GROUP BY JobRole;
+
+SELECT Department,
+       COUNT(CASE WHEN Attrition='Yes' THEN 1 END) * 100.0 / COUNT(*) AS AttritionRate
+FROM employees
+GROUP BY Department;
+
+-- Employees Working Overtime
+select OverTime,
+count(*) as EmployeeCount
+from employees
+group by OverTime;
+
+-- overtime vs attrition
+select OverTime, Attrition,
+count(*) as EmployeeCount
+from employees
+group by OverTime, Attrition;
+
+-- Average Years at Company by Department
+select Department,
+avg(YearsAtCompany) as AvgYears
+from employees
+group by Department;
+
+-- Age group Analysis
+SELECT
+CASE
+    WHEN Age < 30 THEN 'Young'
+    WHEN Age BETWEEN 30 AND 40 THEN 'Mid Age'
+    ELSE 'Senior'
+END AS AgeGroup,
+COUNT(*) AS Employees
+FROM employees
+GROUP BY AgeGroup; 
+
+-- Attrition by age group
+SELECT
+CASE
+    WHEN Age < 30 THEN 'Young'
+    WHEN Age BETWEEN 30 AND 40 THEN 'Mid Age'
+    ELSE 'Senior'
+END AS AgeGroup,
+COUNT(*) AS AttritionCount
+FROM employees
+WHERE Attrition='Yes'
+GROUP BY AgeGroup;
+
+-- Department with high attrition
+select Department,
+count(*) as AttritionCount
+from employees
+group by Department
+order by AttritionCount DESC
+limit 1;
+
+-- Rank Employees by Salary (Window Function)
+SELECT EmployeeNumber,
+       MonthlyIncome,
+       RANK() OVER(ORDER BY MonthlyIncome DESC) AS SalaryRank
+FROM employees;
+
+-- Top Paid Employee in Each Department
+SELECT *
+FROM
+(
+    SELECT EmployeeNumber,
+           Department,
+           MonthlyIncome,
+           RANK() OVER(
+               PARTITION BY Department
+               ORDER BY MonthlyIncome DESC
+           ) AS rnk
+    FROM employees
+) x
+WHERE rnk = 1;
+
+-- Job Satisfaction Analysis
+SELECT JobSatisfaction,
+       COUNT(*) AS Employees
+FROM employees
+GROUP BY JobSatisfaction;
+
+-- Average Salary by Education Level
+SELECT Education,
+       AVG(MonthlyIncome) AS AvgSalary
+FROM employees
+GROUP BY Education;
+
+-- Dashboard KPI Query
+SELECT
+COUNT(*) AS TotalEmployees,
+SUM(CASE WHEN Attrition='Yes' THEN 1 ELSE 0 END) AS AttritionCount,
+ROUND(
+SUM(CASE WHEN Attrition='Yes' THEN 1 ELSE 0 END)*100.0
+/ COUNT(*),2
+) AS AttritionRate,
+AVG(MonthlyIncome) AS AvgSalary,
+AVG(Age) AS AvgAge
+FROM employees;
