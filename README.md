@@ -1,27 +1,27 @@
 HR Analytics Dashboard & Employee Attrition Analysis
 
-Project Overview
+Project Overview:
 This project analyzes employee attrition patterns using Excel, SQL, Python, and Power BI. The objective is to identify key factors influencing employee turnover and provide actionable insights to improve employee retention.
 
-Tools & Technologies
+Tools & Technologies:
 Excel
 SQL
 Python (Pandas, NumPy, Matplotlib)
 Power BI
 DAX
 
-Dataset
+Dataset:
 IBM HR Analytics Employee Attrition Dataset
 
 Project Workflow
 
-Excel
+Excel:
 Data Cleaning
 Data Validation
 Pivot Tables
 Preliminary Analysis
 
-SQL
+SQL:
 KPI Reporting
 Attrition Analysis
 Department Analysis
@@ -29,19 +29,19 @@ Salary Analysis
 Window Functions
 CTEs and Subqueries
 
-Python
+Python:
 Exploratory Data Analysis (EDA)
 Data Visualization
 Correlation Analysis
 Employee Segmentation
 Business Insights
 
-Power BI
+Power BI:
 Executive Summary Dashboard
 Employee Insights Dashboard
 Attrition Risk Analysis Dashboard
 
-Key Insights
+Key Insights:
 Employees aged 18–30 exhibit the highest attrition rate.
 Overtime is strongly associated with employee turnover.
 Low job satisfaction and poor work-life balance contribute to higher attrition.
